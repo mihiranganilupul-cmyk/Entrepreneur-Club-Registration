@@ -746,28 +746,53 @@
                 data.interviewDate = data.interviewDate.split(' ')[0];
             }
 
-            fetch(SCRIPT_URL, {
-                method: 'POST',
-                body: JSON.stringify(data),
-            })
+            // Before submitting, verify the slot is still available (to prevent two users booking the same slot at the same time)
+            fetch(SCRIPT_URL)
                 .then(res => res.json())
-                .then(response => {
-                    if (response.result === 'success') {
-                        form.style.display = 'none';
-                        document.getElementById('timerBox').style.display = 'none';
-                        const successMsg = document.createElement('div');
-                        successMsg.innerHTML = '<h2 style="color:#42e695; text-align:center;">Application Submitted Successfully!</h2><p style="text-align:center; color:rgba(255,255,255,0.7); margin-top:10px;">Thank you for registering.</p>';
-                        document.getElementById('mainContainer').appendChild(successMsg);
-                    } else {
-                        alert("Something went wrong. Please try again.");
+                .then(checkData => {
+                    if (data.interviewDate && data.interviewTime && checkData.bookedSlots && checkData.bookedSlots[data.interviewDate] && checkData.bookedSlots[data.interviewDate].includes(data.interviewTime)) {
+                        alert("Sorry, this time slot was just booked by someone else! Please select a different time.");
                         btn.innerHTML = originalText;
                         btn.disabled = false;
                         btn.style.opacity = '1';
+                        
+                        // Update our local state and UI to reflect the newly booked slot
+                        bookedSlots = checkData.bookedSlots;
+                        updateTimeSlots();
+                        return; // Stop the submission
                     }
+
+                    // Slot is free, proceed with submission
+                    fetch(SCRIPT_URL, {
+                        method: 'POST',
+                        body: JSON.stringify(data),
+                    })
+                        .then(res => res.json())
+                        .then(response => {
+                            if (response.result === 'success') {
+                                form.style.display = 'none';
+                                document.getElementById('timerBox').style.display = 'none';
+                                const successMsg = document.createElement('div');
+                                successMsg.innerHTML = '<h2 style="color:#42e695; text-align:center;">Application Submitted Successfully!</h2><p style="text-align:center; color:rgba(255,255,255,0.7); margin-top:10px;">Thank you for registering.</p>';
+                                document.getElementById('mainContainer').appendChild(successMsg);
+                            } else {
+                                alert("Something went wrong. Please try again.");
+                                btn.innerHTML = originalText;
+                                btn.disabled = false;
+                                btn.style.opacity = '1';
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error!', error.message);
+                            alert("Something went wrong. Please try again.");
+                            btn.innerHTML = originalText;
+                            btn.disabled = false;
+                            btn.style.opacity = '1';
+                        });
                 })
                 .catch(error => {
-                    console.error('Error!', error.message);
-                    alert("Something went wrong. Please try again.");
+                    console.error('Error checking slots!', error.message);
+                    alert("Network error. Please try again.");
                     btn.innerHTML = originalText;
                     btn.disabled = false;
                     btn.style.opacity = '1';
