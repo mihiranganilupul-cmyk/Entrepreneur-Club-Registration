@@ -499,37 +499,43 @@
                     <p>Select Interview Slot (For Leads)</p>
                     <div class="session-grid">
                         <label class="session-pill">
-                            <input type="radio" name="interviewDate" value="2026-09-19 (10:00 AM - 1:00 PM)" class="sessionInput" onchange="updateTimeSlots()">
+                            <input type="radio" name="interviewDate" value="2026-09-19 (10:00 AM - 1:00 PM)"
+                                class="sessionInput" onchange="updateTimeSlots()">
                             <strong>Sep 19</strong>
                             <span>10 AM - 1 PM</span>
                         </label>
 
                         <label class="session-pill">
-                            <input type="radio" name="interviewDate" value="2026-09-19 (2:00 PM - 5:00 PM)" class="sessionInput" onchange="updateTimeSlots()">
+                            <input type="radio" name="interviewDate" value="2026-09-19 (2:00 PM - 5:00 PM)"
+                                class="sessionInput" onchange="updateTimeSlots()">
                             <strong>Sep 19</strong>
                             <span>2 PM - 5 PM</span>
                         </label>
 
                         <label class="session-pill">
-                            <input type="radio" name="interviewDate" value="2026-09-19 (5:30 PM - 8:30 PM)" class="sessionInput" onchange="updateTimeSlots()">
+                            <input type="radio" name="interviewDate" value="2026-09-19 (5:30 PM - 8:30 PM)"
+                                class="sessionInput" onchange="updateTimeSlots()">
                             <strong>Sep 19</strong>
                             <span>5:30 PM - 8:30 PM</span>
                         </label>
 
                         <label class="session-pill">
-                            <input type="radio" name="interviewDate" value="2026-09-20 (10:00 AM - 1:00 PM)" class="sessionInput" onchange="updateTimeSlots()">
+                            <input type="radio" name="interviewDate" value="2026-09-20 (10:00 AM - 1:00 PM)"
+                                class="sessionInput" onchange="updateTimeSlots()">
                             <strong>Sep 20</strong>
                             <span>10 AM - 1 PM</span>
                         </label>
 
                         <label class="session-pill">
-                            <input type="radio" name="interviewDate" value="2026-09-20 (2:00 PM - 5:00 PM)" class="sessionInput" onchange="updateTimeSlots()">
+                            <input type="radio" name="interviewDate" value="2026-09-20 (2:00 PM - 5:00 PM)"
+                                class="sessionInput" onchange="updateTimeSlots()">
                             <strong>Sep 20</strong>
                             <span>2 PM - 5 PM</span>
                         </label>
                     </div>
 
-                    <div id="timeSlotContainer" class="input-group" style="margin-bottom: 0; margin-top: 15px; display: none;">
+                    <div id="timeSlotContainer" class="input-group"
+                        style="margin-bottom: 0; margin-top: 15px; display: none;">
                         <label>Select 10-min Time Slot</label>
                         <select id="interviewTime" name="interviewTime" class="sessionInput" disabled>
                             <option value="" disabled selected>Please select a session first...</option>
@@ -558,7 +564,7 @@
         // Fetch booked slots on load
         window.addEventListener('DOMContentLoaded', () => {
             if (SCRIPT_URL !== 'YOUR_WEB_APP_URL_HERE') {
-                fetch(SCRIPT_URL)
+                fetch(SCRIPT_URL + "?t=" + new Date().getTime())
                     .then(response => response.json())
                     .then(data => {
                         if (data.bookedSlots) {
@@ -594,23 +600,23 @@
                 wrapper.style.marginBottom = "0px";
                 sessionInputs.forEach(input => {
                     input.required = false;
-                    if(input.type === 'radio') input.checked = false;
+                    if (input.type === 'radio') input.checked = false;
                     else input.value = "";
                 });
                 const timeSelect = document.getElementById('interviewTime');
                 timeSelect.disabled = true;
                 timeSelect.innerHTML = '<option value="" disabled selected>Please select a session first...</option>';
                 const timeContainer = document.getElementById('timeSlotContainer');
-                if(timeContainer) timeContainer.style.display = 'none';
+                if (timeContainer) timeContainer.style.display = 'none';
             }
         }
 
         // Generate Time Slots based on Session Duration
         function generateSlotsForSession(sessionStr) {
-            const match = sessionStr.match(/\(([^)]+)\)/); 
+            const match = sessionStr.match(/\(([^)]+)\)/);
             if (!match) return [];
-            
-            const times = match[1].split(' - '); 
+
+            const times = match[1].split(' - ');
             const parseTime = (t) => {
                 const [time, modifier] = t.split(' ');
                 let [hours, minutes] = time.split(':');
@@ -619,16 +625,16 @@
                 if (hours < 12 && modifier === 'PM') hours += 12;
                 return { h: hours, m: parseInt(minutes, 10) };
             };
-            
+
             const start = parseTime(times[0]);
             const end = parseTime(times[1]);
-            
+
             let currentH = start.h;
             let currentM = start.m;
-            
+
             const endH = end.h;
             const endM = end.m;
-            
+
             const allSlots = [];
             while (currentH < endH || (currentH === endH && currentM < endM)) {
                 let nextM = currentM + 10;
@@ -637,15 +643,15 @@
                     nextM -= 60;
                     nextH++;
                 }
-                
+
                 const formatTime = (h, m) => {
                     const ampm = h >= 12 ? 'PM' : 'AM';
                     let hr = h % 12; if (hr === 0) hr = 12;
                     return `${hr}:${m === 0 ? '00' : m} ${ampm}`;
                 };
-                
+
                 allSlots.push(`${formatTime(currentH, currentM)} - ${formatTime(nextH, nextM)}`);
-                
+
                 currentH = nextH;
                 currentM = nextM;
             }
@@ -665,17 +671,17 @@
             if (dateSelect) {
                 const sessionStr = dateSelect.value;
                 const actualDate = sessionStr.split(' ')[0]; // e.g. "2026-09-19"
-                
+
                 timeContainer.style.display = 'block';
                 // Adjust wrapper height to fit the new dropdown gracefully
-                if(wrapper.style.maxHeight !== '0px') {
+                if (wrapper.style.maxHeight !== '0px') {
                     wrapper.style.maxHeight = wrapper.scrollHeight + 300 + "px";
                 }
 
                 timeSelect.disabled = true;
 
                 // Fetch latest slots right before revealing dropdown
-                fetch(SCRIPT_URL)
+                fetch(SCRIPT_URL + "?t=" + new Date().getTime())
                     .then(res => res.json())
                     .then(data => {
                         if (data.bookedSlots) bookedSlots = data.bookedSlots;
@@ -683,9 +689,9 @@
                         timeSelect.innerHTML = '<option value="" disabled selected>Select a time slot...</option>';
                         timeSelect.disabled = false;
                         timeSelect.required = true;
-                        
+
                         const dynamicSlots = generateSlotsForSession(sessionStr);
-                        
+
                         dynamicSlots.forEach(slot => {
                             const option = document.createElement('option');
                             option.value = slot;
@@ -763,7 +769,7 @@
             }
 
             // Before submitting, verify the slot is still available (to prevent two users booking the same slot at the same time)
-            fetch(SCRIPT_URL)
+            fetch(SCRIPT_URL + "?t=" + new Date().getTime())
                 .then(res => res.json())
                 .then(checkData => {
                     if (data.interviewDate && data.interviewTime && checkData.bookedSlots && checkData.bookedSlots[data.interviewDate] && checkData.bookedSlots[data.interviewDate].includes(data.interviewTime)) {
@@ -771,7 +777,7 @@
                         btn.innerHTML = originalText;
                         btn.disabled = false;
                         btn.style.opacity = '1';
-                        
+
                         // Update our local state and UI to reflect the newly booked slot
                         bookedSlots = checkData.bookedSlots;
                         updateTimeSlots();
