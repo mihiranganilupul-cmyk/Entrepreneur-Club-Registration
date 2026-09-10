@@ -660,7 +660,7 @@
             const timeContainer = document.getElementById('timeSlotContainer');
             const wrapper = document.getElementById('sessionWrapper');
 
-            timeSelect.innerHTML = '<option value="" disabled selected>Select a time slot...</option>';
+            timeSelect.innerHTML = '<option value="" disabled selected>Loading time slots...</option>';
 
             if (dateSelect) {
                 const sessionStr = dateSelect.value;
@@ -672,23 +672,39 @@
                     wrapper.style.maxHeight = wrapper.scrollHeight + 300 + "px";
                 }
 
-                timeSelect.disabled = false;
-                timeSelect.required = true;
-                const dynamicSlots = generateSlotsForSession(sessionStr);
-                
-                dynamicSlots.forEach(slot => {
-                    const option = document.createElement('option');
-                    option.value = slot;
-                    const isBooked = bookedSlots[actualDate] && bookedSlots[actualDate].includes(slot);
-                    if (isBooked) {
-                        option.textContent = `${slot} (Booked)`;
-                        option.disabled = true;
-                        option.style.color = "rgba(255,255,255,0.3)";
-                    } else {
-                        option.textContent = slot;
-                    }
-                    timeSelect.appendChild(option);
-                });
+                timeSelect.disabled = true;
+
+                // Fetch latest slots right before revealing dropdown
+                fetch(SCRIPT_URL)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.bookedSlots) bookedSlots = data.bookedSlots;
+
+                        timeSelect.innerHTML = '<option value="" disabled selected>Select a time slot...</option>';
+                        timeSelect.disabled = false;
+                        timeSelect.required = true;
+                        
+                        const dynamicSlots = generateSlotsForSession(sessionStr);
+                        
+                        dynamicSlots.forEach(slot => {
+                            const option = document.createElement('option');
+                            option.value = slot;
+                            const isBooked = bookedSlots[actualDate] && bookedSlots[actualDate].includes(slot);
+                            if (isBooked) {
+                                option.textContent = `${slot} (Booked)`;
+                                option.disabled = true;
+                                option.style.color = "rgba(255,255,255,0.3)";
+                            } else {
+                                option.textContent = slot;
+                            }
+                            timeSelect.appendChild(option);
+                        });
+                    })
+                    .catch(err => {
+                        console.error('Error fetching slots:', err);
+                        timeSelect.innerHTML = '<option value="" disabled selected>Error loading time slots</option>';
+                    });
+
             } else {
                 timeSelect.disabled = true;
                 timeSelect.required = false;
