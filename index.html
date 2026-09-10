@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KDU Entrepreneur Club | Premium Registration</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600&family=Poppins:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        /* Base Reset & Apple Style Fonts */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            /* Premium Dark Apple Mesh Background */
+            background-color: #000000;
+            background-image:
+                radial-gradient(at 0% 0%, rgba(10, 46, 22, 0.8) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(46, 204, 113, 0.4) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(17, 89, 52, 0.6) 0px, transparent 50%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* Apple Glass Container */
+        .form-container {
+            background: rgba(20, 20, 20, 0.4);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 32px;
+            padding: 45px 40px;
+            width: 100%;
+            max-width: 580px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        @keyframes slideUpFade {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            background: linear-gradient(135deg, #42e695 0%, #3bb2b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 400;
+        }
+
+        /* Countdown Timer - Apple Widget Style */
+        .countdown-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .countdown-container p {
+            font-size: 12px;
+            color: #42e695;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 500;
+        }
+
+        .timer {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .time-box span {
+            font-size: 26px;
+            font-weight: 600;
+            color: #fff;
+            display: block;
+            line-height: 1.2;
+        }
+
+        .time-box label {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Apple Style Inputs */
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 8px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-left: 5px;
+        }
+
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            color: #fff;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        /* Custom Dropdown Styling */
+        .input-group select {
+            appearance: none;
+            -webkit-appearance: none;
+            background: rgba(0, 0, 0, 0.2) url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") no-repeat right 20px center;
+            background-size: 16px;
+            cursor: pointer;
+        }
+
+        .input-group select option {
+            background-color: #1a1a1a;
+            color: #fff;
+            padding: 10px;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            background: rgba(0, 0, 0, 0.4);
+            border-color: #42e695;
+            box-shadow: 0 0 0 4px rgba(66, 230, 149, 0.15);
+        }
+
+        .input-group input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .row .input-group {
+            flex: 1;
+        }
+
+        /* Apple Segmented Control for Roles */
+        .role-section {
+            margin-bottom: 20px;
+        }
+
+        .role-section label.title {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 10px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-left: 5px;
+        }
+
+        .segmented-control {
+            display: flex;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 14px;
+            padding: 4px;
+            position: relative;
+        }
+
+        .segmented-control label {
+            flex: 1;
+            text-align: center;
+            padding: 12px 0;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+            border-radius: 10px;
+        }
+
+        .segmented-control input {
+            display: none;
+        }
+
+        .segmented-control input:checked+label {
+            color: #fff;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Smooth Session Popup */
+        #sessionWrapper {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+            opacity: 0;
+            margin-bottom: 0px;
+        }
+
+        .session-box {
+            background: rgba(66, 230, 149, 0.05);
+            border: 1px solid rgba(66, 230, 149, 0.2);
+            border-radius: 20px;
+            padding: 20px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+        }
+
+        .session-box p {
+            font-size: 13px;
+            color: #42e695;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        /* 5 Slots Grid Layout */
+        .session-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        /* Make the 5th item span both columns to balance the UI */
+        .session-pill:last-child {
+            grid-column: span 2;
+        }
+
+        .session-pill {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 10px 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .session-pill strong {
+            display: block;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 3px;
+        }
+
+        .session-pill span {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .session-pill input {
+            display: none;
+        }
+
+        .session-pill:has(input:checked) {
+            background: #42e695;
+            color: #000;
+            border-color: #42e695;
+            box-shadow: 0 4px 15px rgba(66, 230, 149, 0.3);
+            transform: scale(1.03);
+        }
+
+        .session-pill:has(input:checked) strong,
+        .session-pill:has(input:checked) span {
+            color: #000;
+            font-weight: 600;
+        }
+
+        /* iOS style Checkbox for Terms */
+        .terms-section {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin: 25px 0;
+            padding: 0 5px;
+        }
+
+        .terms-section input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            cursor: pointer;
+            position: relative;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .terms-section input[type="checkbox"]:checked {
+            background: #42e695;
+            border-color: #42e695;
+        }
+
+        .terms-section input[type="checkbox"]:checked::after {
+            content: '✓';
+            position: absolute;
+            color: #000;
+            font-size: 14px;
+            font-weight: bold;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .terms-text {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+            line-height: 1.5;
+        }
+
+        .terms-text strong {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Apple Style Button */
+        button {
+            width: 100%;
+            padding: 16px;
+            background: #fff;
+            color: #000;
+            border: none;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            margin-top: 10px;
+        }
+
+        button:hover {
+            transform: scale(0.98);
+            background: #e0e0e0;
+        }
+
+        .expired-message {
+            text-align: center;
+            color: #ff4757;
+            font-weight: 500;
+            padding: 20px;
+            display: none;
+        }
+
+        @media (max-width: 500px) {
+            .row {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .form-container {
+                padding: 30px 20px;
+                border-radius: 24px;
+            }
+
+            .session-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .session-pill:last-child {
+                grid-column: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="form-container" id="mainContainer">
+        <div class="header">
+            <h1>KDU Entrepreneur Club</h1>
+            <p>Official Registration</p>
+        </div>
+
+        <div class="countdown-container" id="timerBox">
+            <p>Registration Closes In</p>
+            <div class="timer">
+                <div class="time-box">
+                    <span id="days">00</span>
+                    <label>Days</label>
+                </div>
+                <div class="time-box">
+                    <span id="hours">00</span>
+                    <label>Hours</label>
+                </div>
+                <div class="time-box">
+                    <span id="mins">00</span>
+                    <label>Mins</label>
+                </div>
+                <div class="time-box">
+                    <span id="secs">00</span>
+                    <label>Secs</label>
+                </div>
+            </div>
+        </div>
+
+        <div id="expiredMessage" class="expired-message">
+            <h2>Registrations are now closed!</h2>
+        </div>
+
+        <form id="registrationForm" name="KDU_Club_Registration">
+            <div class="input-group">
+                <label>Full Name</label>
+                <input type="text" name="fullName" placeholder="Enter your full name" required>
+            </div>
+
+            <div class="row">
+                <div class="input-group">
+                    <label>Registration No</label>
+                    <input type="text" name="regNo" placeholder="D/BSM/25/..." required>
+                </div>
+                <div class="input-group">
+                    <label>Contact No</label>
+                    <input type="tel" name="contactNo" placeholder="07X XXX XXXX" required>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="input-group">
+                    <label>Degree Program</label>
+                    <input type="text" name="degree" value="BSc Management" required>
+                </div>
+                <div class="input-group">
+                    <label>Faculty</label>
+                    <input type="text" name="faculty" value="FMSH" required>
+                </div>
+            </div>
+
+            <!-- Role Selection -->
+            <div class="role-section">
+                <label class="title">Applying For</label>
+                <div class="segmented-control">
+                    <input type="radio" id="roleMember" name="role" value="Member" onchange="toggleInterview(this)"
+                        required>
+                    <label for="roleMember">Member</label>
+
+                    <input type="radio" id="roleLead" name="role" value="Lead" onchange="toggleInterview(this)"
+                        required>
+                    <label for="roleLead">Lead</label>
+                </div>
+            </div>
+
+            <!-- Department Dropdown -->
+            <div class="input-group">
+                <label>Department / Committee</label>
+                <select name="department" required>
+                    <option value="" disabled selected>Select your preferred department...</option>
+                    <option value="Event management and Logistic">Event management and Logistic</option>
+                    <option value="Finance and Sponsorship">Finance and Sponsorship</option>
+                    <option value="Documentation and content">Documentation and content</option>
+                    <option value="Community outreach">Community outreach</option>
+                    <option value="Marketing and public relation">Marketing and public relation</option>
+                    <option value="Magazine and publication">Magazine and publication</option>
+                    <option value="Entrepreneurship and startup">Entrepreneurship and startup</option>
+                    <option value="Research and content development">Research and content development</option>
+                </select>
+            </div>
+
+            <!-- Animated Session Select Popup (Dates from Image) -->
+            <div id="sessionWrapper">
+                <div class="session-box">
+                    <p>Select Interview Slot (For Leads)</p>
+                    <div class="session-grid">
+                        <label class="session-pill">
+                            <input type="radio" name="interviewDate" value="2026-09-19 (10:00 AM - 1:00 PM)" class="sessionInput" onchange="updateTimeSlots()">
+                            <strong>Sep 19</strong>
+                            <span>10 AM - 1 PM</span>
+                        </label>
+
+                        <label class="session-pill">
+                            <input type="radio" name="interviewDate" value="2026-09-19 (2:00 PM - 5:00 PM)" class="sessionInput" onchange="updateTimeSlots()">
+                            <strong>Sep 19</strong>
+                            <span>2 PM - 5 PM</span>
+                        </label>
+
+                        <label class="session-pill">
+                            <input type="radio" name="interviewDate" value="2026-09-19 (5:30 PM - 8:30 PM)" class="sessionInput" onchange="updateTimeSlots()">
+                            <strong>Sep 19</strong>
+                            <span>5:30 PM - 8:30 PM</span>
+                        </label>
+
+                        <label class="session-pill">
+                            <input type="radio" name="interviewDate" value="2026-09-20 (10:00 AM - 1:00 PM)" class="sessionInput" onchange="updateTimeSlots()">
+                            <strong>Sep 20</strong>
+                            <span>10 AM - 1 PM</span>
+                        </label>
+
+                        <label class="session-pill">
+                            <input type="radio" name="interviewDate" value="2026-09-20 (2:00 PM - 5:00 PM)" class="sessionInput" onchange="updateTimeSlots()">
+                            <strong>Sep 20</strong>
+                            <span>2 PM - 5 PM</span>
+                        </label>
+                    </div>
+
+                    <div id="timeSlotContainer" class="input-group" style="margin-bottom: 0; margin-top: 15px; display: none;">
+                        <label>Select 10-min Time Slot</label>
+                        <select id="interviewTime" name="interviewTime" class="sessionInput" disabled>
+                            <option value="" disabled selected>Please select a session first...</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="terms-section">
+                <input type="checkbox" name="termsAgreed" required>
+                <div class="terms-text">
+                    I acknowledge that all details will be used exclusively by the <strong>KDU Entrepreneur
+                        Club</strong>. I agree that selections and all decisions are strictly governed by the club
+                    management.
+                </div>
+            </div>
+
+            <button type="submit" id="submitBtn">Submit Application</button>
+        </form>
+    </div>
+
+    <script>
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwIGwqLvNApb5acTik6VBma6Xnh5Yt41trgbcr91CoiLmXeByC_AzRmX7Gh9mRqhVe5/exec'; // ⚠️ REPLACE THIS WITH YOUR GOOGLE APPS SCRIPT URL ⚠️
+        let bookedSlots = {};
+
+        // Fetch booked slots on load
+        window.addEventListener('DOMContentLoaded', () => {
+            if (SCRIPT_URL !== 'YOUR_WEB_APP_URL_HERE') {
+                fetch(SCRIPT_URL)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.bookedSlots) {
+                            bookedSlots = data.bookedSlots;
+                            // If a date is already selected (e.g. page refresh), update the slots
+                            if (document.querySelector('input[name="interviewDate"]:checked')) {
+                                updateTimeSlots();
+                            }
+                        }
+                    })
+                    .catch(error => console.error('Error fetching booked slots:', error));
+            }
+        });
+
+        // Smooth Animation for Session Popup
+        function toggleInterview(radio) {
+            const wrapper = document.getElementById('sessionWrapper');
+            const sessionInputs = document.querySelectorAll('.sessionInput');
+
+            // Logic updated for 'Lead'
+            if (radio.value === 'Lead') {
+                wrapper.style.maxHeight = wrapper.scrollHeight + 300 + "px"; // Increased to accommodate dropdowns
+                wrapper.style.opacity = "1";
+                wrapper.style.marginBottom = "20px";
+                sessionInputs.forEach(input => {
+                    if (input.name === 'interviewDate' || (input.id === 'interviewTime' && !input.disabled)) {
+                        input.required = true;
+                    }
+                });
+            } else {
+                wrapper.style.maxHeight = "0px";
+                wrapper.style.opacity = "0";
+                wrapper.style.marginBottom = "0px";
+                sessionInputs.forEach(input => {
+                    input.required = false;
+                    if(input.type === 'radio') input.checked = false;
+                    else input.value = "";
+                });
+                const timeSelect = document.getElementById('interviewTime');
+                timeSelect.disabled = true;
+                timeSelect.innerHTML = '<option value="" disabled selected>Please select a session first...</option>';
+                const timeContainer = document.getElementById('timeSlotContainer');
+                if(timeContainer) timeContainer.style.display = 'none';
+            }
+        }
+
+        // Generate Time Slots based on Session Duration
+        function generateSlotsForSession(sessionStr) {
+            const match = sessionStr.match(/\(([^)]+)\)/); 
+            if (!match) return [];
+            
+            const times = match[1].split(' - '); 
+            const parseTime = (t) => {
+                const [time, modifier] = t.split(' ');
+                let [hours, minutes] = time.split(':');
+                hours = parseInt(hours, 10);
+                if (hours === 12 && modifier === 'AM') hours = 0;
+                if (hours < 12 && modifier === 'PM') hours += 12;
+                return { h: hours, m: parseInt(minutes, 10) };
+            };
+            
+            const start = parseTime(times[0]);
+            const end = parseTime(times[1]);
+            
+            let currentH = start.h;
+            let currentM = start.m;
+            
+            const endH = end.h;
+            const endM = end.m;
+            
+            const allSlots = [];
+            while (currentH < endH || (currentH === endH && currentM < endM)) {
+                let nextM = currentM + 10;
+                let nextH = currentH;
+                if (nextM >= 60) {
+                    nextM -= 60;
+                    nextH++;
+                }
+                
+                const formatTime = (h, m) => {
+                    const ampm = h >= 12 ? 'PM' : 'AM';
+                    let hr = h % 12; if (hr === 0) hr = 12;
+                    return `${hr}:${m === 0 ? '00' : m} ${ampm}`;
+                };
+                
+                allSlots.push(`${formatTime(currentH, currentM)} - ${formatTime(nextH, nextM)}`);
+                
+                currentH = nextH;
+                currentM = nextM;
+            }
+            return allSlots;
+        }
+
+        // Dynamic booked slots fetched from Google Sheet
+
+        function updateTimeSlots() {
+            const dateSelect = document.querySelector('input[name="interviewDate"]:checked');
+            const timeSelect = document.getElementById('interviewTime');
+            const timeContainer = document.getElementById('timeSlotContainer');
+            const wrapper = document.getElementById('sessionWrapper');
+
+            timeSelect.innerHTML = '<option value="" disabled selected>Select a time slot...</option>';
+
+            if (dateSelect) {
+                const sessionStr = dateSelect.value;
+                const actualDate = sessionStr.split(' ')[0]; // e.g. "2026-09-19"
+                
+                timeContainer.style.display = 'block';
+                // Adjust wrapper height to fit the new dropdown gracefully
+                if(wrapper.style.maxHeight !== '0px') {
+                    wrapper.style.maxHeight = wrapper.scrollHeight + 300 + "px";
+                }
+
+                timeSelect.disabled = false;
+                timeSelect.required = true;
+                const dynamicSlots = generateSlotsForSession(sessionStr);
+                
+                dynamicSlots.forEach(slot => {
+                    const option = document.createElement('option');
+                    option.value = slot;
+                    const isBooked = bookedSlots[actualDate] && bookedSlots[actualDate].includes(slot);
+                    if (isBooked) {
+                        option.textContent = `${slot} (Booked)`;
+                        option.disabled = true;
+                        option.style.color = "rgba(255,255,255,0.3)";
+                    } else {
+                        option.textContent = slot;
+                    }
+                    timeSelect.appendChild(option);
+                });
+            } else {
+                timeSelect.disabled = true;
+                timeSelect.required = false;
+                timeSelect.innerHTML = '<option value="" disabled selected>Please select a session first...</option>';
+                timeContainer.style.display = 'none';
+            }
+        }
+
+        // Countdown Timer Logic (Deadline: Sept 20, 2026)
+        const deadline = new Date("Sep 20, 2026 23:59:59").getTime();
+
+        const x = setInterval(function () {
+            const now = new Date().getTime();
+            const distance = deadline - now;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerHTML = days < 10 ? "0" + days : days;
+            document.getElementById("hours").innerHTML = hours < 10 ? "0" + hours : hours;
+            document.getElementById("mins").innerHTML = minutes < 10 ? "0" + minutes : minutes;
+            document.getElementById("secs").innerHTML = seconds < 10 ? "0" + seconds : seconds;
+
+            if (distance < 0) {
+                clearInterval(x);
+                document.getElementById("timerBox").style.display = "none";
+                document.getElementById("registrationForm").style.display = "none";
+                document.getElementById("expiredMessage").style.display = "block";
+            }
+        }, 1000);
+
+        // Form Submission Logic
+        const form = document.getElementById('registrationForm');
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+
+            if (SCRIPT_URL === 'YOUR_WEB_APP_URL_HERE') {
+                alert("Please add your Google Apps Script URL in the code.");
+                return;
+            }
+
+            const btn = document.getElementById('submitBtn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = 'Submitting...';
+            btn.disabled = true;
+            btn.style.opacity = '0.7';
+
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+
+            // Extract only the date for the Google Sheet column
+            if (data.interviewDate) {
+                data.interviewDate = data.interviewDate.split(' ')[0];
+            }
+
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify(data),
+            })
+                .then(res => res.json())
+                .then(response => {
+                    if (response.result === 'success') {
+                        form.style.display = 'none';
+                        document.getElementById('timerBox').style.display = 'none';
+                        const successMsg = document.createElement('div');
+                        successMsg.innerHTML = '<h2 style="color:#42e695; text-align:center;">Application Submitted Successfully!</h2><p style="text-align:center; color:rgba(255,255,255,0.7); margin-top:10px;">Thank you for registering.</p>';
+                        document.getElementById('mainContainer').appendChild(successMsg);
+                    } else {
+                        alert("Something went wrong. Please try again.");
+                        btn.innerHTML = originalText;
+                        btn.disabled = false;
+                        btn.style.opacity = '1';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error!', error.message);
+                    alert("Something went wrong. Please try again.");
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    btn.style.opacity = '1';
+                });
+        });
+    </script>
+
+</body>
+
+</html>
