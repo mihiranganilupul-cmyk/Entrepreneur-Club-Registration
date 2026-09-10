@@ -62,6 +62,38 @@
             margin-bottom: 30px;
         }
 
+        .logo-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 16px;
+        }
+
+        .logo-row img {
+            height: 70px;
+            width: 70px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4));
+            transition: transform 0.3s ease;
+        }
+
+        .logo-row img:nth-child(3) {
+            /* Club logo has extra whitespace — scale it up to match visually */
+            height: 80px;
+            width: 80px;
+        }
+
+        .logo-row img:hover {
+            transform: scale(1.05);
+        }
+
+        .logo-divider {
+            width: 1px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
         .header h1 {
             font-size: 28px;
             font-weight: 600;
@@ -270,6 +302,7 @@
             cursor: pointer;
             transition: all 0.2s ease;
             color: rgba(255, 255, 255, 0.7);
+            position: relative;
         }
 
         .session-pill strong {
@@ -300,6 +333,36 @@
         .session-pill:has(input:checked) span {
             color: #000;
             font-weight: 600;
+        }
+
+        /* Fully Booked Session Pill */
+        .session-pill.booked {
+            cursor: not-allowed;
+            background: rgba(255, 70, 70, 0.07);
+            border-color: rgba(255, 70, 70, 0.3);
+            opacity: 0.65;
+            pointer-events: none;
+        }
+
+        .session-pill.booked strong {
+            color: rgba(255, 255, 255, 0.45);
+        }
+
+        .session-pill.booked span {
+            color: rgba(255, 100, 100, 0.8);
+        }
+
+        .booked-badge {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: rgba(255, 90, 90, 0.9);
+            background: rgba(255, 70, 70, 0.15);
+            border: 1px solid rgba(255, 70, 70, 0.3);
+            border-radius: 6px;
+            padding: 2px 6px;
+            margin-top: 4px;
         }
 
         /* iOS style Checkbox for Terms */
@@ -405,6 +468,11 @@
 
     <div class="form-container" id="mainContainer">
         <div class="header">
+            <div class="logo-row">
+                <img src="kdu-logo.png" alt="KDU Logo">
+                <div class="logo-divider"></div>
+                <img src="club-logo.png" alt="Entrepreneur Club Logo">
+            </div>
             <h1>KDU Entrepreneur Club</h1>
             <p>Official Registration</p>
         </div>
@@ -463,20 +531,6 @@
                 </div>
             </div>
 
-            <!-- Role Selection -->
-            <div class="role-section">
-                <label class="title">Applying For</label>
-                <div class="segmented-control">
-                    <input type="radio" id="roleMember" name="role" value="Member" onchange="toggleInterview(this)"
-                        required>
-                    <label for="roleMember">Member</label>
-
-                    <input type="radio" id="roleLead" name="role" value="Lead" onchange="toggleInterview(this)"
-                        required>
-                    <label for="roleLead">Lead</label>
-                </div>
-            </div>
-
             <!-- Department Dropdown -->
             <div class="input-group">
                 <label>Department / Committee</label>
@@ -491,6 +545,20 @@
                     <option value="Entrepreneurship and startup">Entrepreneurship and startup</option>
                     <option value="Research and content development">Research and content development</option>
                 </select>
+            </div>
+
+            <!-- Role Selection -->
+            <div class="role-section">
+                <label class="title">Applying For</label>
+                <div class="segmented-control">
+                    <input type="radio" id="roleMember" name="role" value="Member" onchange="toggleInterview(this)"
+                        required>
+                    <label for="roleMember">Member</label>
+
+                    <input type="radio" id="roleLead" name="role" value="Lead" onchange="toggleInterview(this)"
+                        required>
+                    <label for="roleLead">Lead</label>
+                </div>
             </div>
 
             <!-- Animated Session Select Popup (Dates from Image) -->
@@ -561,14 +629,55 @@
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwIGwqLvNApb5acTik6VBma6Xnh5Yt41trgbcr91CoiLmXeByC_AzRmX7Gh9mRqhVe5/exec'; // ⚠️ REPLACE THIS WITH YOUR GOOGLE APPS SCRIPT URL ⚠️
         let bookedSlots = {};
 
+        // Check if all 10-min slots in a session are booked
+        function isSessionFullyBooked(sessionStr, freshBookedSlots) {
+            const actualDate = sessionStr.split(' ')[0];
+            const allSlots = generateSlotsForSession(sessionStr);
+            if (allSlots.length === 0) return false;
+            const dateBookings = freshBookedSlots[actualDate] || [];
+            return allSlots.every(slot => dateBookings.includes(slot));
+        }
+
+        // Visually mark session pills as booked/available
+        function refreshSessionPillStates(freshBookedSlots) {
+            document.querySelectorAll('.session-pill').forEach(pill => {
+                const input = pill.querySelector('input[name="interviewDate"]');
+                if (!input) return;
+
+                // Remove any existing booked badge
+                const existingBadge = pill.querySelector('.booked-badge');
+                if (existingBadge) existingBadge.remove();
+
+                if (isSessionFullyBooked(input.value, freshBookedSlots)) {
+                    pill.classList.add('booked');
+                    input.disabled = true;
+                    // Uncheck if this pill was selected
+                    if (input.checked) {
+                        input.checked = false;
+                        // Hide time slot dropdown
+                        const timeContainer = document.getElementById('timeSlotContainer');
+                        if (timeContainer) timeContainer.style.display = 'none';
+                    }
+                    const badge = document.createElement('span');
+                    badge.className = 'booked-badge';
+                    badge.textContent = '🔒 Fully Booked';
+                    pill.appendChild(badge);
+                } else {
+                    pill.classList.remove('booked');
+                    input.disabled = false;
+                }
+            });
+        }
+
         // Fetch booked slots on load
         window.addEventListener('DOMContentLoaded', () => {
             if (SCRIPT_URL !== 'YOUR_WEB_APP_URL_HERE') {
-                fetch(SCRIPT_URL + "?t=" + new Date().getTime())
+                fetch(SCRIPT_URL)
                     .then(response => response.json())
                     .then(data => {
                         if (data.bookedSlots) {
                             bookedSlots = data.bookedSlots;
+                            refreshSessionPillStates(bookedSlots);
                             // If a date is already selected (e.g. page refresh), update the slots
                             if (document.querySelector('input[name="interviewDate"]:checked')) {
                                 updateTimeSlots();
@@ -658,7 +767,37 @@
             return allSlots;
         }
 
-        // Dynamic booked slots fetched from Google Sheet
+        // Dynamic booked slots fetched fresh from Google Sheet every time a session is picked
+
+        function populateTimeDropdown(sessionStr, freshBookedSlots) {
+            const timeSelect = document.getElementById('interviewTime');
+            const timeContainer = document.getElementById('timeSlotContainer');
+            const wrapper = document.getElementById('sessionWrapper');
+            const actualDate = sessionStr.split(' ')[0]; // e.g. "2026-09-19"
+
+            timeSelect.innerHTML = '<option value="" disabled selected>Select a time slot...</option>';
+            timeContainer.style.display = 'block';
+            if (wrapper.style.maxHeight !== '0px') {
+                wrapper.style.maxHeight = wrapper.scrollHeight + 300 + "px";
+            }
+            timeSelect.disabled = false;
+            timeSelect.required = true;
+
+            const dynamicSlots = generateSlotsForSession(sessionStr);
+            dynamicSlots.forEach(slot => {
+                const option = document.createElement('option');
+                option.value = slot;
+                const isBooked = freshBookedSlots[actualDate] && freshBookedSlots[actualDate].includes(slot);
+                if (isBooked) {
+                    option.textContent = `${slot}  ✗ Booked`;
+                    option.disabled = true;
+                    option.style.color = "rgba(255,100,100,0.6)";
+                } else {
+                    option.textContent = slot;
+                }
+                timeSelect.appendChild(option);
+            });
+        }
 
         function updateTimeSlots() {
             const dateSelect = document.querySelector('input[name="interviewDate"]:checked');
@@ -666,51 +805,34 @@
             const timeContainer = document.getElementById('timeSlotContainer');
             const wrapper = document.getElementById('sessionWrapper');
 
-            timeSelect.innerHTML = '<option value="" disabled selected>Loading time slots...</option>';
+            // Reset time dropdown to loading state
+            timeSelect.innerHTML = '<option value="" disabled selected>Loading available slots...</option>';
+            timeSelect.disabled = true;
 
             if (dateSelect) {
                 const sessionStr = dateSelect.value;
-                const actualDate = sessionStr.split(' ')[0]; // e.g. "2026-09-19"
-
                 timeContainer.style.display = 'block';
-                // Adjust wrapper height to fit the new dropdown gracefully
                 if (wrapper.style.maxHeight !== '0px') {
                     wrapper.style.maxHeight = wrapper.scrollHeight + 300 + "px";
                 }
 
-                timeSelect.disabled = true;
-
-                // Fetch latest slots right before revealing dropdown
-                fetch(SCRIPT_URL + "?t=" + new Date().getTime())
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.bookedSlots) bookedSlots = data.bookedSlots;
-
-                        timeSelect.innerHTML = '<option value="" disabled selected>Select a time slot...</option>';
-                        timeSelect.disabled = false;
-                        timeSelect.required = true;
-
-                        const dynamicSlots = generateSlotsForSession(sessionStr);
-
-                        dynamicSlots.forEach(slot => {
-                            const option = document.createElement('option');
-                            option.value = slot;
-                            const isBooked = bookedSlots[actualDate] && bookedSlots[actualDate].includes(slot);
-                            if (isBooked) {
-                                option.textContent = `${slot} (Booked)`;
-                                option.disabled = true;
-                                option.style.color = "rgba(255,255,255,0.3)";
-                            } else {
-                                option.textContent = slot;
-                            }
-                            timeSelect.appendChild(option);
+                // Always fetch FRESH data from Google Sheet to get real-time booked slots
+                if (SCRIPT_URL !== 'YOUR_WEB_APP_URL_HERE') {
+                    fetch(SCRIPT_URL)
+                        .then(response => response.json())
+                        .then(data => {
+                            bookedSlots = data.bookedSlots || {};
+                            refreshSessionPillStates(bookedSlots);
+                            populateTimeDropdown(sessionStr, bookedSlots);
+                        })
+                        .catch(() => {
+                            // If fetch fails, fall back to last known bookedSlots
+                            populateTimeDropdown(sessionStr, bookedSlots);
                         });
-                    })
-                    .catch(err => {
-                        console.error('Error fetching slots:', err);
-                        timeSelect.innerHTML = '<option value="" disabled selected>Error loading time slots</option>';
-                    });
-
+                } else {
+                    // No URL set yet — still show slots without booked info
+                    populateTimeDropdown(sessionStr, bookedSlots);
+                }
             } else {
                 timeSelect.disabled = true;
                 timeSelect.required = false;
@@ -768,53 +890,46 @@
                 data.interviewDate = data.interviewDate.split(' ')[0];
             }
 
-            // Before submitting, verify the slot is still available (to prevent two users booking the same slot at the same time)
-            fetch(SCRIPT_URL + "?t=" + new Date().getTime())
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify(data),
+            })
                 .then(res => res.json())
-                .then(checkData => {
-                    if (data.interviewDate && data.interviewTime && checkData.bookedSlots && checkData.bookedSlots[data.interviewDate] && checkData.bookedSlots[data.interviewDate].includes(data.interviewTime)) {
-                        alert("Sorry, this time slot was just booked by someone else! Please select a different time.");
+                .then(response => {
+                    if (response.result === 'success') {
+                        form.style.display = 'none';
+                        document.getElementById('timerBox').style.display = 'none';
+                        const successMsg = document.createElement('div');
+                        successMsg.innerHTML = '<h2 style="color:#42e695; text-align:center;">Application Submitted Successfully!</h2><p style="text-align:center; color:rgba(255,255,255,0.7); margin-top:10px;">Thank you for registering.</p>';
+                        document.getElementById('mainContainer').appendChild(successMsg);
+                    } else if (response.result === 'slot_taken') {
+                        // Another user just grabbed this slot — refresh the UI
+                        alert(response.message || 'This slot was just booked. Please select another.');
                         btn.innerHTML = originalText;
                         btn.disabled = false;
                         btn.style.opacity = '1';
-
-                        // Update our local state and UI to reflect the newly booked slot
-                        bookedSlots = checkData.bookedSlots;
-                        updateTimeSlots();
-                        return; // Stop the submission
+                        // Force-refresh the slot states so the user sees the newly booked slot
+                        fetch(SCRIPT_URL)
+                            .then(r => r.json())
+                            .then(d => {
+                                if (d.bookedSlots) {
+                                    bookedSlots = d.bookedSlots;
+                                    refreshSessionPillStates(bookedSlots);
+                                    // Reset the time dropdown too
+                                    const checkedDate = document.querySelector('input[name="interviewDate"]:checked');
+                                    if (checkedDate) updateTimeSlots();
+                                }
+                            });
+                    } else {
+                        alert("Something went wrong. Please try again.");
+                        btn.innerHTML = originalText;
+                        btn.disabled = false;
+                        btn.style.opacity = '1';
                     }
-
-                    // Slot is free, proceed with submission
-                    fetch(SCRIPT_URL, {
-                        method: 'POST',
-                        body: JSON.stringify(data),
-                    })
-                        .then(res => res.json())
-                        .then(response => {
-                            if (response.result === 'success') {
-                                form.style.display = 'none';
-                                document.getElementById('timerBox').style.display = 'none';
-                                const successMsg = document.createElement('div');
-                                successMsg.innerHTML = '<h2 style="color:#42e695; text-align:center;">Application Submitted Successfully!</h2><p style="text-align:center; color:rgba(255,255,255,0.7); margin-top:10px;">Thank you for registering.</p>';
-                                document.getElementById('mainContainer').appendChild(successMsg);
-                            } else {
-                                alert("Something went wrong. Please try again.");
-                                btn.innerHTML = originalText;
-                                btn.disabled = false;
-                                btn.style.opacity = '1';
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error!', error.message);
-                            alert("Something went wrong. Please try again.");
-                            btn.innerHTML = originalText;
-                            btn.disabled = false;
-                            btn.style.opacity = '1';
-                        });
                 })
                 .catch(error => {
-                    console.error('Error checking slots!', error.message);
-                    alert("Network error. Please try again.");
+                    console.error('Error!', error.message);
+                    alert("Something went wrong. Please try again.");
                     btn.innerHTML = originalText;
                     btn.disabled = false;
                     btn.style.opacity = '1';
